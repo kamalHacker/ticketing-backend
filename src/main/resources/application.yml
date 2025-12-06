@@ -22,5 +22,5 @@ spring:
       mail.smtp.starttls.enable: true
 
 server:
-  port: 10000
+  port: ${PORT:8080}
 
