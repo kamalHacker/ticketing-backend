@@ -33,14 +33,13 @@ public class SecurityConfig {
 
         http.cors(Customizer.withDefaults());
 
-
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/auth/admin/**").hasRole("ADMIN")
-                        
 
                         .requestMatchers(HttpMethod.POST, "/tickets").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/tickets/my").hasRole("USER")
@@ -65,9 +64,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(Arrays.asList(
-            "http://localhost:3000",
-            "http://172.16.0.2:3000"
-        ));
+                "http://localhost:3000",
+                "http://172.16.0.2:3000"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setExposedHeaders(Arrays.asList("*"));
