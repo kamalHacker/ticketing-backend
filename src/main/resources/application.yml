@@ -1,14 +1,16 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/ticketing_system
-    username: postgres
-    password: Kamal@1313#125
+    url: postgresql://neondb_owner:npg_8VQS3gTYendA@ep-super-wildflower-a131rdol-pooler.ap-southeast-1.aws.neon.tech/neondb
+    username: neondb_owner
+    password: npg_8VQS3gTYendA
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   mail:
     host: smtp.gmail.com
@@ -20,5 +22,5 @@ spring:
       mail.smtp.starttls.enable: true
 
 server:
-  port: 9090
+  port: 10000
 
