@@ -26,9 +26,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.equals("/auth/login") || path.equals("/auth/register");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
@@ -56,12 +62,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // Spring requires roles to start with "ROLE_"
         var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + tokenRole));
 
-        // 🔥 Debug log
+        // Debug log
         System.out.println("JwtAuthFilter Authorities → " + authorities);
 
-        // ---------------------------------------------------------
-        // 🔥 STEP 1 — Detect USER DELETED
-        // ---------------------------------------------------------
         UserDetails userDetails;
         try {
             userDetails = userDetailsService.loadUserByUsername(username);
@@ -71,10 +74,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        // ---------------------------------------------------------
-        // 🔥 STEP 2 — Detect ROLE CHANGE
-        // Check database role vs token role
-        // ---------------------------------------------------------
         String dbRole = userDetails.getAuthorities().iterator().next().getAuthority()
                 .replace("ROLE_", "");
 
@@ -85,16 +84,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         // Continue with your existing logic
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        authorities  // keep your existing authority assignment
-                );
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                authorities // keep your existing authority assignment
+        );
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
     }
 }
-
