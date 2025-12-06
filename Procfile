@@ -1,1 +1,0 @@
-web: mvn -DskipTests spring-boot:run -Dserver.port=${PORT}
