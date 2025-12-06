@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: postgresql://neondb_owner:npg_8VQS3gTYendA@ep-super-wildflower-a131rdol-pooler.ap-southeast-1.aws.neon.tech/neondb
+    url: jdbc:postgresql://ep-super-wildflower-a131rdol-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
     username: neondb_owner
     password: npg_8VQS3gTYendA
     driver-class-name: org.postgresql.Driver
