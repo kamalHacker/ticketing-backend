@@ -12,14 +12,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  mail:
-    host: ${SPRING_MAIL_HOST}
-    port: ${SPRING_MAIL_PORT}
-    username: ${SPRING_MAIL_USERNAME}
-    password: ${SPRING_MAIL_PASSWORD}
-    properties:
-      mail.smtp.auth: ${SPRING_MAIL_SMTP_AUTH:true}
-      mail.smtp.starttls.enable: ${SPRING_MAIL_SMTP_STARTTLS:true}
+  # mail:
+  #   host: ${SPRING_MAIL_HOST}
+  #   port: ${SPRING_MAIL_PORT}
+  #   username: ${SPRING_MAIL_USERNAME}
+  #   password: ${SPRING_MAIL_PASSWORD}
+  #   properties:
+  #     mail.smtp.auth: ${SPRING_MAIL_SMTP_AUTH:true}
+  #     mail.smtp.starttls.enable: ${SPRING_MAIL_SMTP_STARTTLS:true}
 
 server:
   port: ${PORT:8080}

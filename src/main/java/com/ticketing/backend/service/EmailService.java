@@ -1,8 +1,11 @@
 package com.ticketing.backend.service;
 
+import com.sendgrid.*;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -10,26 +13,37 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailService {
 
-    private final JavaMailSender mailSender;
+    @Value("${SENDGRID_API_KEY}")
+    private String sendGridApiKey;
 
     @Async
     public void sendEmail(String to, String subject, String message) {
+        System.out.println("📧 Sending email via SendGrid...");
+
         try {
-            
-            // DEBUG → Confirm Railway is using correct SMTP settings
-            System.out.println("SMTP Host = " + System.getenv("SPRING_MAIL_HOST"));
-            System.out.println("SMTP Username = " + System.getenv("SPRING_MAIL_USERNAME"));
-            System.out.println("Sending email to: " + to);
+            // Prepare email
+            Email from = new Email("satwanikamal2003@gmail.com");
+            Email toEmail = new Email(to);
+            Content content = new Content("text/plain", message);
 
-            SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setTo(to);
-            mail.setSubject(subject);
-            mail.setText(message);
+            Mail mail = new Mail(from, subject, toEmail, content);
 
-            mailSender.send(mail);
-            System.out.println("✅ Email sent!");
+            // Build request
+            SendGrid sg = new SendGrid(sendGridApiKey);
+            Request request = new Request();
+
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+
+            Response response = sg.api(request);
+
+            System.out.println("📨 SendGrid Status = " + response.getStatusCode());
+            System.out.println("📄 SendGrid Body = " + response.getBody());
+            System.out.println("🔍 SendGrid Headers = " + response.getHeaders());
+
         } catch (Exception e) {
-            System.out.println("❌ Email send failed: " + e.getMessage());
+            System.err.println("❌ SendGrid Email Failed: " + e.getMessage());
         }
     }
 }
