@@ -15,6 +15,12 @@ public class EmailService {
     @Async
     public void sendEmail(String to, String subject, String message) {
         try {
+            
+            // DEBUG → Confirm Railway is using correct SMTP settings
+            System.out.println("SMTP Host = " + System.getenv("SPRING_MAIL_HOST"));
+            System.out.println("SMTP Username = " + System.getenv("SPRING_MAIL_USERNAME"));
+            System.out.println("Sending email to: " + to);
+
             SimpleMailMessage mail = new SimpleMailMessage();
             mail.setTo(to);
             mail.setSubject(subject);
